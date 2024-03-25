@@ -40,34 +40,23 @@ export default function App() {
 
   const fetchData = async() => {
     // 1. Implement this function
+    let menuItemsJson = [];
     try {
       const response = await fetch(API_URL);
       const json = await response.json();
-      const menuItemsJson = json["menu"].map(obj => ({
-        id: obj.id,
+      menuItemsJson = json["menu"].map(obj => ({
+        uuid: obj.id,
         title: obj.title, 
         price: obj.price,
         category: obj.category.title, 
       }))
-
-      const sectionListData = sections.map(sectionName => {
-        let newSection = {};
-        newSection["title"] = sectionName;
-        newSection["data"] = menuItemsJson.filter((r) => { 
-          return r.category == sectionName
-        }).map((menuItem) => {
-          return { price: menuItem.price, title: menuItem.title};
-        })
-        return newSection;
-      });
-      console.log("########################### sectionListData", sectionListData);
-      setData(sectionListData);
+      console.log("fetchData - $$$$$$$$$$$$$$$$$$", menuItemsJson);
     } catch (error) {
       console.error(error);
     } finally {
     }
     
-    return [];
+    return menuItemsJson;
   }
 
   useEffect(() => {
@@ -75,18 +64,14 @@ export default function App() {
       try {
         await createTable();
         let menuItems = await getMenuItems();
-        console.log(menuItems, "@@@@@@@@@@@@@@@@@@");
-
-        // The application only fetches the menu data once from a remote URL
-        // and then stores it into a SQLite database.
-        // After that, every application restart loads the menu from the database
+       
         if (!menuItems.length) {
-          menuItems = await fetchData();
-          console.log(menuItems, "2---@@@@@@@@@@@@@@@@@@");
-          // saveMenuItems(menuItems);
+          menuItems = await fetchData(); // get from internet
+          saveMenuItems(menuItems); // to db
         }
 
-        const sectionListData = getSectionListData(menuItems);
+        const sectionListData = getSectionListData(menuItems, sections);
+
         setData(sectionListData);
       } catch (e) {
         // Handle error
