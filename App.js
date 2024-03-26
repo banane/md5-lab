@@ -39,7 +39,6 @@ export default function App() {
   );
 
   const fetchData = async() => {
-    // 1. Implement this function
     let menuItemsJson = [];
     try {
       const response = await fetch(API_URL);
@@ -50,7 +49,6 @@ export default function App() {
         price: obj.price,
         category: obj.category.title, 
       }))
-      console.log("fetchData - $$$$$$$$$$$$$$$$$$", menuItemsJson);
     } catch (error) {
       console.error(error);
     } finally {
@@ -90,11 +88,11 @@ export default function App() {
         return filterSelections[i];
       });
       try {
-        const menuItems = await filterByQueryAndCategories(
+        const menuItems2 = await filterByQueryAndCategories(
           query,
           activeCategories
         );
-        const sectionListData = getSectionListData(menuItems);
+        const sectionListData = getSectionListData(menuItems2, sections);
         setData(sectionListData);
       } catch (e) {
         Alert.alert(e.message);
