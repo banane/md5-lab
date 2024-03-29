@@ -39,22 +39,17 @@ export default function App() {
   );
 
   const fetchData = async() => {
-    let menuItemsJson = [];
     try {
       const response = await fetch(API_URL);
-      const json = await response.json();
-      menuItemsJson = json["menu"].map(obj => ({
-        uuid: obj.id,
-        title: obj.title, 
-        price: obj.price,
-        category: obj.category.title, 
-      }))
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      return json?.menu.map((obj) => ({
+        ...obj, category: obj.category.title }))
     } catch (error) {
       console.error(error);
-    } finally {
-    }
-    
-    return menuItemsJson;
+      return [];
+    } 
   }
 
   useEffect(() => {
