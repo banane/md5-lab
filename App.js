@@ -44,7 +44,7 @@ export default function App() {
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
-      return json?.menu.map((obj) => ({
+      return response?.menu.map((obj) => ({
         ...obj, category: obj.category.title }))
     } catch (error) {
       console.error(error);
@@ -143,7 +143,6 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
